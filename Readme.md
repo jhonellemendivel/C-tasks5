@@ -1,91 +1,57 @@
-    using System;
-
     class StudentReportCard
     {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Get and validate total number of students
-        int totalStudents;
-        Console.Write("Enter Total Students : ");
-        while (!int.TryParse(Console.ReadLine(), out totalStudents) || totalStudents < 1)
+        int n;
+        Console.Write("Total Students: ");
+        while (!int.TryParse(Console.ReadLine(), out n) || n < 1)
+            Console.Write("Enter ≥1: ");
+
+        object[][] s = new object[n][];
+
+        for (int i = 0; i < n; i++)
         {
-            Console.Write("Invalid input! Please enter a positive whole number for total students: ");
+            Console.Write($"\nName {i+1}: ");
+            string nm = Console.ReadLine().Trim();
+            while (string.IsNullOrEmpty(nm))
+            {
+                Console.Write("Name can't be empty: ");
+                nm = Console.ReadLine().Trim();
+            }
+
+            int e, m, c;
+            Console.Write("English (0-100): ");
+            while (!int.TryParse(Console.ReadLine(), out e) || e < 0 || e > 100)
+                Console.Write("0-100 only: ");
+
+            Console.Write("Math (0-100): ");
+            while (!int.TryParse(Console.ReadLine(), out m) || m < 0 || m > 100)
+                Console.Write("0-100 only: ");
+
+            Console.Write("Computer (0-100): ");
+            while (!int.TryParse(Console.ReadLine(), out c) || c < 0 || c > 100)
+                Console.Write("0-100 only: ");
+
+            s[i] = new object[] { nm, e, m, c, e + m + c };
         }
 
-        // Multi-dimensional structure: [student index][0=Name, 1=English, 2=Math, 3=Computer, 4=Total]
-        object[][] studentData = new object[totalStudents][];
-
-        // Loop to input data for each student
-        for (int i = 0; i < totalStudents; i++)
-        {
-            Console.WriteLine($"\n--- Enter details for Student {i + 1} ---");
-            
-            // Get student name
-            Console.Write("Enter Student Name : ");
-            string name = Console.ReadLine().Trim();
-            while (string.IsNullOrEmpty(name))
-            {
-                Console.Write("Name cannot be empty! Please enter Student Name : ");
-                name = Console.ReadLine().Trim();
-            }
-
-            // Get and validate English marks
-            int engMarks;
-            Console.Write("Enter English Marks (Out Of 100) : ");
-            while (!int.TryParse(Console.ReadLine(), out engMarks) || engMarks < 0 || engMarks > 100)
-            {
-                Console.Write("Invalid marks! Enter English Marks between 0-100 : ");
-            }
-
-            // Get and validate Math marks
-            int mathMarks;
-            Console.Write("Enter Math Marks (Out Of 100) : ");
-            while (!int.TryParse(Console.ReadLine(), out mathMarks) || mathMarks < 0 || mathMarks > 100)
-            {
-                Console.Write("Invalid marks! Enter Math Marks between 0-100 : ");
-            }
-
-            // Get and validate Computer marks
-            int compMarks;
-            Console.Write("Enter Computer Marks (Out Of 100) : ");
-            while (!int.TryParse(Console.ReadLine(), out compMarks) || compMarks < 0 || compMarks > 100)
-            {
-                Console.Write("Invalid marks! Enter Computer Marks between 0-100 : ");
-            }
-
-            // Calculate total marks
-            int total = engMarks + mathMarks + compMarks;
-
-            // Store data in the array
-            studentData[i] = new object[] { name, engMarks, mathMarks, compMarks, total };
-            Console.WriteLine("*********************************************");
-        }
-
-        // Sort students in descending order of total marks
-        for (int i = 0; i < totalStudents - 1; i++)
-        {
-            for (int j = i + 1; j < totalStudents; j++)
-            {
-                int totalI = (int)studentData[i][4];
-                int totalJ = (int)studentData[j][4];
-                if (totalI < totalJ)
+        // Sort descending by total
+        for (int i = 0; i < n - 1; i++)
+            for (int j = i + 1; j < n; j++)
+                if ((int)s[i][4] < (int)s[j][4])
                 {
-                    // Swap elements
-                    object[] temp = studentData[i];
-                    studentData[i] = studentData[j];
-                    studentData[j] = temp;
+                    object[] t = s[i];
+                    s[i] = s[j];
+                    s[j] = t;
                 }
-            }
-        }
 
-        // Generate and display report card
-        Console.WriteLine("\n****************Report Card*******************");
-        Console.WriteLine("****************************************");
-        for (int i = 0; i < totalStudents; i++)
+        // Display report
+        Console.WriteLine("\n***Report Card***");
+        Console.WriteLine("************************");
+        for (int i = 0; i < n; i++)
         {
-            string name = (string)studentData[i][0];
-            int total = (int)studentData[i][4];
-            Console.WriteLine($"Student Name: {name}, Position: {i + 1}, Total: {total}/300");
-            Console.WriteLine("****************************************");
+            Console.WriteLine($"Name: {(string)s[i][0]}, Pos: {i+1}, Total: {(int)s[i][4]}/300");
+            Console.WriteLine("************************");
         }
+    }
     }
